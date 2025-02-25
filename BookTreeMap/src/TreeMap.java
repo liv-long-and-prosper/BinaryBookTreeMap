@@ -55,8 +55,7 @@ public class TreeMap<K extends Comparable<K>,V> implements TreeMapInterface<K,V>
             throw new IllegalArgumentException("value cannot be null");
         }
         if (firstNode == null) {
-            TreeMapNode<K,V> newNode = new TreeMapNode<K,V>(key, value);
-            firstNode = newNode;
+            firstNode = new TreeMapNode<K,V>(key, value);
         } else {
             if (key.compareTo(firstNode.key) == 0) {
                firstNode.value = value;
@@ -130,20 +129,20 @@ public class TreeMap<K extends Comparable<K>,V> implements TreeMapInterface<K,V>
      */
     @Override
     public K[] toKeyArray(K[] array) {
-        K[] keyArr = array;
-        if(keyArr.length <= size){
-            keyArr = Arrays.copyOf(keyArr, Math.max(2*keyArr.length+1, 2*size+1));
+        if (array.length < size){
+            array = Arrays.copyOf(array, size);
         }
-        traverseAndAdd(overallRoot, keyArr, 0);
-        return keyArr;
+        traverseAndAdd(overallRoot, array, 0);
+        return array;
     }
 
-    private void traverseAndAdd(TreeMapNode<K,V> firstNode, K[] array, int idx){
+    private int traverseAndAdd(TreeMapNode<K,V> firstNode, K[] array, int idx){
         if(firstNode != null){
-            array[idx] = firstNode.key;
-            traverseAndAdd(firstNode.left, array, 2*idx+1);
-            traverseAndAdd(firstNode.right, array, 2*idx+2);
+            idx = traverseAndAdd(firstNode.left, array, idx);
+            array[idx++] = firstNode.key;
+            idx = traverseAndAdd(firstNode.right, array, idx);
         }
+        return idx;
     }
 
 //     post: prints the data of the tree, one per line

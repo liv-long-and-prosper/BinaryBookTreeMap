@@ -1,46 +1,42 @@
 package BookTreeMap.src;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args){
-//    TreeMap<Integer,Integer> test = new TreeMap<>();
-//
-//    test.put(0, 0);
-//    test.put(1, -1);
-//    test.put(2, 5);
-//
-//    test.put(-1, 0);
-//    test.put(10, -1);
-//    test.put(-6, 5);
-//    test.put(-3,2);
-//
-//    Integer[] arr = new Integer[0];
-//
-//    System.out.println("arr b4 toKeyArray method: ");
-//    System.out.println(Arrays.toString(arr));
-//
-//    arr = test.toKeyArray(arr);
-//
-//    System.out.println("\n arr after toKeyArray method: ");
-//
-//    System.out.println(Arrays.toString(arr));
-//    test.print();
 
-//        System.out.println(test.get(10));
-//        System.out.println(test.containsKey(1));
-//    System.out.println(test.containsKey("3"));
+    public static void main(String[] args) {
+        TreeMap<String,Book> bookTreeMap = new TreeMap<>();
+        Scanner scanner = null;
+        File file = new File("BookTreeMap/datafiles/BooksDataFile.txt");
 
-//    System.out.println(test.size());
-//    test.clear();
-//    System.out.println(test.size());
+        try{
+            scanner = new Scanner(file);
+        }catch(FileNotFoundException e){
+            System.out.println("err: "+e);
+            return;
+        }
 
+        scanner.nextLine();
+        while(scanner.hasNextLine()){
+            String line = scanner.nextLine();
+            String[] fields = line.split("~");
 
-//        Book test = new Book("123568", "Me, myself, and I", 2025, "Bitches", "Bitches and Hoes", 5.0);
-//        Book test2 = new Book("123568", "Me, myself, and I", 2025, "Bitches", "Bitches and Hoes", 5.0);
-//
-//        System.out.println("Book 1: "+ test);
-//        System.out.println("Book 2: "+ test2);
-//        System.out.println(test.equals(test2));
+            Book current = new Book(fields[2], fields[3], Integer.parseInt(fields[4]), fields[5], fields[6], Double.parseDouble(fields[7]));
+            bookTreeMap.put(fields[2], current);
+        }
+
+        String[] isbnCodes = bookTreeMap.toKeyArray(new String[0]);
+
+        System.out.printf("Tree Size: %d\n",bookTreeMap.size());
+        System.out.println("---------------------");
+        System.out.println("TreeMap contains isbn#0439023513: " + bookTreeMap.containsKey("0439023513"));
+        System.out.println("TreeMap contains isbn#0316068047: "+bookTreeMap.containsKey("0316068047"));
+        System.out.println("---------------------");
+        System.out.println(bookTreeMap.get("0930289234"));
+        System.out.println("---------------------");
+        System.out.println(Arrays.toString(isbnCodes));
     }
 }
